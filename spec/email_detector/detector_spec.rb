@@ -68,6 +68,13 @@ describe EmailDetector::Detector do
     end
   end
   
+  describe "given a Detector object" do
+    it "accepts a Detector" do
+      @it = EmailDetector::Detector.new(EmailDetector::Detector.new("bob@example.com"))
+      @it.to_s.should eq("bob@example.com")
+    end
+  end
+
   describe "given an email list with both comma-separated and space-separated addresses" do
     before do
       @it = EmailDetector::Detector.new("billy@example.com, joe@example.com bob@example.com")

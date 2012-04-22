@@ -8,8 +8,8 @@ module EmailDetector
     attr_reader :emails, :ignored
 
     # delegate to_a, each, empty? to the @list ivar
-    def_delegators :@list, :to_a, :each, :empty?
     alias :to_s :emails
+    def_delegators :@list, :to_a, :each, :empty?, :join
 
     def initialize input
       self.emails = input
@@ -18,7 +18,7 @@ module EmailDetector
     def emails= input
       @ignored = []
       input ||= ''
-      input = input.join(', ') if input.is_a? Array
+      input = input.join(', ') if input.respond_to?(:join)
 
       pattern = /(?<=\A|[<\s,])[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,3}(?=[>,\s]|\Z)/i
       @list = input.scan(pattern).map(&:downcase).uniq
