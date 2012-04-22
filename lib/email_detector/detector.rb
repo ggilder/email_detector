@@ -5,10 +5,9 @@ module EmailDetector
     extend Forwardable
     include Enumerable
 
-    attr_reader :emails, :ignored
+    attr_reader :ignored
 
     # delegate to_a, each, empty? to the @list ivar
-    alias :to_s :emails
     def_delegators :@list, :to_a, :each, :empty?, :join
 
     def initialize input
@@ -24,8 +23,12 @@ module EmailDetector
       @list = input.scan(pattern).map(&:downcase).uniq
       @ignored = input.split(pattern).map {|e| e.gsub(/\A[,<>\s]+|[,<>\s]+\z/, '')}
       @ignored.delete_if(&:empty?)
-      @emails = @list.join(", ")
     end
+
+    def emails
+      @list.join(", ")
+    end
+    alias :to_s :emails
 
     def + other
       self.class.new(to_a + other.to_a)
